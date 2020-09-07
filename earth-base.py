@@ -10,6 +10,14 @@ screen = pygame.display.set_mode(flags=(
     #| pygame.FULLSCREEN
 ))
 
+background = pygame.image.load('images/earth-base/background.png').convert()
+screen.blit(background, (0,0))
+
+pygame.display.flip()
+#pygame.display.update()
+# Ignore events, but need to pass control to get display actually updated
+print(pygame.event.get())
+
 def get_ip():
     import socket
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
