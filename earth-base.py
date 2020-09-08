@@ -1,5 +1,10 @@
+#!/usr/bin/env python3
+
 import flask
 import pygame
+import threading
+
+FPS = 30
 
 html_app = flask.Flask(__name__)
 
@@ -10,13 +15,10 @@ screen = pygame.display.set_mode(flags=(
     #| pygame.FULLSCREEN
 ))
 
-background = pygame.image.load('images/earth-base/background.png').convert()
-screen.blit(background, (0,0))
+clock = pygame.time.Clock()
+running = True
 
-pygame.display.flip()
-#pygame.display.update()
-# Ignore events, but need to pass control to get display actually updated
-print(pygame.event.get())
+background = pygame.image.load('images/earth-base/background.png').convert()
 
 def get_ip():
     import socket
@@ -48,4 +50,27 @@ def exit_server():
     if func is None:
         raise RuntimeError('Not running with the Werkzeug Server')
     func()
+    global running
+    running = False
     return 'Server shutting down...'
+
+if __name__ == '__main__':
+    # pygame really wants to run on the main thread, so make flask run
+    # on a separate thread
+    threading.Thread(
+        target=html_app.run,
+        kwargs={
+            'port': 80,
+            'host': '0.0.0.0',
+        }).start()
+
+    print('Starting graphics event loop.')
+    while running:
+        clock.tick(FPS)
+
+        screen.blit(background, (0,0))
+        pygame.display.flip()
+        # Ignore events (use web server instead)
+        pygame.event.get()
+
+    print('Stopping graphics event loop.')
