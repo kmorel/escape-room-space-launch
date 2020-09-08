@@ -4,21 +4,31 @@ import flask
 import pygame
 import threading
 
+import earth_base_shipping_container
+
 FPS = 30
 
 html_app = flask.Flask(__name__)
 
 pygame.init()
-screen = None
+
 screen = pygame.display.set_mode(flags=(
     pygame.NOFRAME
     #| pygame.FULLSCREEN
 ))
 
+sprites = pygame.sprite.Group()
+
 clock = pygame.time.Clock()
 running = True
 
 background = pygame.image.load('images/earth-base/background.png').convert()
+screen.blit(background, (0,0))
+
+#test_code
+test_container = earth_base_shipping_container.ShippingContainer(4, 0, 0)
+sprites.add(test_container)
+test_container.move_to(2, 0)
 
 def get_ip():
     import socket
@@ -65,12 +75,21 @@ if __name__ == '__main__':
         }).start()
 
     print('Starting graphics event loop.')
+    pygame.display.flip()
     while running:
         clock.tick(FPS)
 
-        screen.blit(background, (0,0))
-        pygame.display.flip()
+        sprites.update()
+
+        #screen.blit(background, (0,0))
+        sprites.draw(screen)
+
+        pygame.display.update(test_container.rect)
+        #pygame.display.flip()
         # Ignore events (use web server instead)
         pygame.event.get()
 
+        print(clock.get_fps())
+
     print('Stopping graphics event loop.')
+    pygame.quit()
