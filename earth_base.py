@@ -28,16 +28,8 @@ running = True
 background = pygame.image.load('images/earth-base/background.png').convert()
 screen.blit(background, (0,0))
 
-#test_code
-test_container = earth_base_shipping_container.ShippingContainer(4, 0, 0)
-sprites.add(test_container)
-test_container = earth_base_shipping_container.ShippingContainer(3, 0, 1)
-sprites.add(test_container)
-test_container = earth_base_shipping_container.ShippingContainer(2, 0, 2)
-sprites.add(test_container)
-test_container = earth_base_shipping_container.ShippingContainer(1, 0, 3)
-sprites.add(test_container)
-test_container.move_to(1, 0)
+containers = earth_base_shipping_container.ContainerStacks(sprites)
+containers.move(0, 1)
 
 def get_ip():
     import socket

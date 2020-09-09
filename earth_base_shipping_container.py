@@ -9,6 +9,7 @@ class ShippingContainer(pygame.sprite.Sprite):
 
     def __init__(self, number, platform, stack_height):
         pygame.sprite.Sprite.__init__(self)
+        self.number = number
         image_file = \
             'images/earth-base/shipping-container-{}.png'.format(number)
         self.image = pygame.image.load(image_file).convert()
@@ -69,4 +70,27 @@ class ShippingContainer(pygame.sprite.Sprite):
                 self.rect.bottom = target_y
                 self.state = self.STATE_STOP
 
+
+class ContainerStacks:
+    def __init__(self, sprite_group):
+        self.stacks = [[], [], []]
+        for container_id in range(4):
+            container = ShippingContainer(4 - container_id, 0, container_id)
+            sprite_group.add(container)
+            self.stacks[0].append(container)
+
+    def can_move(self, start_stack, end_stack):
+        if len(self.stacks[start_stack]) < 1:
+            return False
+        if len(self.stacks[end_stack]) < 1:
+            return True
+        return (self.stacks[stack_start] < self.stacks[stack_end])
+
+    def move(self, start_stack, end_stack):
+        if not self.can_move(start_stack, end_stack):
+            print('Invalid move: {} -> {}'.format(start_stack, end_stack))
+            return
+        container = self.stacks[start_stack].pop()
+        container.move_to(end_stack, len(self.stacks[end_stack]))
+        self.stacks[end_stack].append(container)
 
