@@ -1,0 +1,44 @@
+<!doctype html>
+
+<head>
+  <title>Earth Base Container Control</title>
+  <link rel="stylesheet" type="text/css" href="/static/css/main.css" />
+</head>
+
+<body>
+
+<h1>Shipping Container Control</h1>
+
+<table style="width:100%;">
+  <tr>
+    <td>
+      {% if m01 %}
+      <a href="/move/0/1"><div class="button" style="width:85%;">&xrarr;</div></a>
+      {% elif m10 %}
+      <a href="/move/1/0"><div class="button" style="width:85%;">&xlarr;</div></a>
+      {% endif %}
+    </td>
+    <td>
+      {% if m12 %}
+      <a href="/move/1/2"><div class="button" style="width:85%;">&xrarr;</div></a>
+      {% elif m21 %}
+      <a href="/move/2/1"><div class="button" style="width:85%;">&xlarr;</div></a>
+      {% else %}
+      <div class="button" style="width:85%; background-color: white;">&nbsp;&nbsp;&nbsp;</div>
+      {% endif %}
+    </td>
+  </tr>
+  <tr>
+    <td colspan=2>
+      {% if m02 %}
+      <a href="/move/0/2"><div class="button" style="width:90%;">&xrarr;</div></a>
+      {% elif m20 %}
+      <a href="/move/2/0"><div class="button" style="width:90%;">&xlarr;</div></a>
+      {% endif %}
+    </td>
+  </tr>
+</table>
+
+Note: A shipping container can only be placed on a larger container.
+
+</body>

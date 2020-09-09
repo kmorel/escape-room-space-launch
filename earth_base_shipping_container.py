@@ -15,7 +15,7 @@ class ShippingContainer(pygame.sprite.Sprite):
         self.image = pygame.image.load(image_file).convert()
         self.rect = self.image.get_rect()
 
-        self.speed = 10
+        self.speed = 100
         self.container_height = 100
         self.container_width = 388
 
@@ -84,7 +84,7 @@ class ContainerStacks:
             return False
         if len(self.stacks[end_stack]) < 1:
             return True
-        return (self.stacks[stack_start] < self.stacks[stack_end])
+        return (self.stacks[start_stack][-1].number < self.stacks[end_stack][-1].number)
 
     def move(self, start_stack, end_stack):
         if not self.can_move(start_stack, end_stack):
