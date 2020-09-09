@@ -43,10 +43,30 @@ class ShippingContainer(pygame.sprite.Sprite):
         self.state = self.STATE_MOVE_UP
 
     def update(self):
-        if (self.state == self.STATE_MOVE_UP):
+        target_x = self.platform2x(self.platform)
+        target_y = self.height2y(self.stack_height)
+        if self.state == self.STATE_MOVE_UP:
             self.rect.y -= self.speed
-            if self.rect.bottom < self.container_lift_y:
+            if self.rect.bottom <= self.container_lift_y:
                 self.rect.bottom = self.container_lift_y
+                if target_x < self.rect.centerx:
+                    self.state = self.STATE_MOVE_LEFT
+                else:
+                    self.state = self.STATE_MOVE_RIGHT
+        elif self.state == self.STATE_MOVE_LEFT:
+            self.rect.x -= self.speed
+            if self.rect.centerx <= target_x:
+                self.rect.centerx = target_x
+                self.state = self.STATE_MOVE_DOWN
+        elif self.state == self.STATE_MOVE_RIGHT:
+            self.rect.x += self.speed
+            if self.rect.centerx >= target_x:
+                self.rect.centerx = target_x
+                self.state = self.STATE_MOVE_DOWN
+        elif self.state == self.STATE_MOVE_DOWN:
+            self.rect.y += self.speed
+            if self.rect.bottom >= target_y:
+                self.rect.bottom = target_y
                 self.state = self.STATE_STOP
 
 

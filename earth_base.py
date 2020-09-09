@@ -3,6 +3,8 @@
 import flask
 import pygame
 import threading
+import sys
+import os
 
 import earth_base_shipping_container
 
@@ -13,8 +15,7 @@ html_app = flask.Flask(__name__)
 pygame.init()
 
 screen = pygame.display.set_mode(flags=(
-    pygame.NOFRAME
-    #| pygame.FULLSCREEN
+    pygame.FULLSCREEN
 ))
 
 sprites = pygame.sprite.Group()
@@ -70,8 +71,8 @@ if __name__ == '__main__':
     threading.Thread(
         target=html_app.run,
         kwargs={
-            'port': 80,
             'host': '0.0.0.0',
+            'port': 80,
         }).start()
 
     print('Starting graphics event loop.')
@@ -79,17 +80,25 @@ if __name__ == '__main__':
     while running:
         clock.tick(FPS)
 
+        screen.blit(background, test_container.rect, test_container.rect)
+
         sprites.update()
 
-        #screen.blit(background, (0,0))
         sprites.draw(screen)
 
         pygame.display.update(test_container.rect)
         #pygame.display.flip()
-        # Ignore events (use web server instead)
-        pygame.event.get()
 
-        print(clock.get_fps())
+        # Process events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif (event.type == pygame.KEYDOWN) and (event.key == ord('q')):
+                running = False
+
+    print(clock.get_fps())
 
     print('Stopping graphics event loop.')
     pygame.quit()
+    # Hard exit (to quit out of the flask thread in case)
+    os._exit(0)
