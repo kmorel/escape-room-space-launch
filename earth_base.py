@@ -5,6 +5,7 @@ import pygame
 import threading
 import sys
 import os
+import traceback
 
 import earth_base_shipping_container
 
@@ -15,7 +16,8 @@ html_app = flask.Flask(__name__)
 pygame.init()
 
 screen = pygame.display.set_mode(flags=(
-    pygame.FULLSCREEN
+    pygame.FULLSCREEN |
+    0
 ))
 
 sprites = pygame.sprite.Group()
@@ -29,7 +31,13 @@ screen.blit(background, (0,0))
 #test_code
 test_container = earth_base_shipping_container.ShippingContainer(4, 0, 0)
 sprites.add(test_container)
-test_container.move_to(2, 0)
+test_container = earth_base_shipping_container.ShippingContainer(3, 0, 1)
+sprites.add(test_container)
+test_container = earth_base_shipping_container.ShippingContainer(2, 0, 2)
+sprites.add(test_container)
+test_container = earth_base_shipping_container.ShippingContainer(1, 0, 3)
+sprites.add(test_container)
+test_container.move_to(1, 0)
 
 def get_ip():
     import socket
@@ -66,39 +74,49 @@ def exit_server():
     return 'Server shutting down...'
 
 if __name__ == '__main__':
-    # pygame really wants to run on the main thread, so make flask run
-    # on a separate thread
-    threading.Thread(
-        target=html_app.run,
-        kwargs={
-            'host': '0.0.0.0',
-            'port': 80,
-        }).start()
+    try:
+        # pygame really wants to run on the main thread, so make flask run
+        # on a separate thread
+        threading.Thread(
+            target=html_app.run,
+            kwargs={
+                'host': '0.0.0.0',
+                'port': 80,
+            }).start()
 
-    print('Starting graphics event loop.')
-    pygame.display.flip()
-    while running:
-        clock.tick(FPS)
+        print('Starting graphics event loop.')
+        pygame.display.flip()
+        while running:
+            clock.tick(FPS)
 
-        screen.blit(background, test_container.rect, test_container.rect)
+            #screen.blit(background, test_container.rect, test_container.rect)
+            for sprite in sprites:
+                rect = sprite.rect
+                screen.blit(background, rect, rect)
+                pygame.display.update(rect)
 
-        sprites.update()
+            sprites.update()
 
-        sprites.draw(screen)
+            sprites.draw(screen)
+            for sprite in sprites:
+                rect = sprite.rect
+                pygame.display.update(rect)
 
-        pygame.display.update(test_container.rect)
-        #pygame.display.flip()
+            # Process events
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif (event.type == pygame.KEYDOWN) and (event.key == ord('q')):
+                    running = False
 
-        # Process events
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            elif (event.type == pygame.KEYDOWN) and (event.key == ord('q')):
-                running = False
+        print(clock.get_fps())
 
-    print(clock.get_fps())
+        print('Stopping graphics event loop.')
+        pygame.quit()
 
-    print('Stopping graphics event loop.')
-    pygame.quit()
-    # Hard exit (to quit out of the flask thread in case)
-    os._exit(0)
+    except:
+        traceback.print_exc(file=sys.stdout)
+
+    finally:
+        # Hard exit (to quit out of the flask thread in case)
+        os._exit(0)

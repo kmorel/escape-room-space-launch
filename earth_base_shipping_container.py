@@ -14,7 +14,7 @@ class ShippingContainer(pygame.sprite.Sprite):
         self.image = pygame.image.load(image_file).convert()
         self.rect = self.image.get_rect()
 
-        self.speed = 5
+        self.speed = 10
         self.container_height = 100
         self.container_width = 388
 
