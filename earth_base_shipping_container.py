@@ -78,6 +78,7 @@ class ContainerStacks:
             container = ShippingContainer(4 - container_id, 0, container_id)
             sprite_group.add(container)
             self.stacks[0].append(container)
+        self.move_sound = pygame.mixer.Sound('audio/hydraulic-lift.ogg')
 
     def can_move(self, start_stack, end_stack):
         if len(self.stacks[start_stack]) < 1:
@@ -93,4 +94,5 @@ class ContainerStacks:
         container = self.stacks[start_stack].pop()
         container.move_to(end_stack, len(self.stacks[end_stack]))
         self.stacks[end_stack].append(container)
+        self.move_sound.play()
 
