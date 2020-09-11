@@ -11,7 +11,7 @@
 
 <ul>
   {% for page in pages %}
-  <li><a href="http://{{ ip }}{{ page.url }}">{{ page.name }}</a></li>
+  <li><a href="http://{{ ip }}:{{ port }}{{ page.url }}">{{ page.name }}</a></li>
   {% endfor %}
 </ul>
 

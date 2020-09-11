@@ -59,6 +59,7 @@ def control_sheet():
     return flask.render_template('earth-base-control.html',
                                  pages=pages,
                                  ip=get_ip(),
+                                 port=5000
                                  )
 
 @html_app.route('/exit-server')
@@ -95,7 +96,7 @@ if __name__ == '__main__':
             target=html_app.run,
             kwargs={
                 'host': '0.0.0.0',
-                'port': 80,
+                #'port': 80,
             }).start()
 
         print('Starting graphics event loop.')
