@@ -20,14 +20,12 @@ def start():
     lens.setFilmSize(2*ratio, 2)
     base.cam.node().setLens(lens)
 
-    background_node = panda3d.core.GeomNode('background')
-    background_node.addGeom(panda3d_utils.make_square(-1, -1, 0, 1, 1, 0))
-
     background_texture = loader.loadTexture('images/earth_base/background.png')
 
-    background = render.attachNewNode(background_node)
+    background = render.attachNewNode(
+        panda3d_utils.make_billboard('background'))
     background.setTexture(background_texture)
-    background.setPos(panda3d.core.LVector3(0, 0, -1))
+    background.setPos(0, 0, -1)
     background.setScale(ratio, 1, 1)
 
     base.run()
