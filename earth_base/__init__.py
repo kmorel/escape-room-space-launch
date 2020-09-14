@@ -3,6 +3,7 @@ import direct.showbase.ShowBase
 
 import panda3d_utils
 
+from earth_base import key_events
 from earth_base import shipping_container
 
 def start():
@@ -31,5 +32,7 @@ def start():
     background.setScale(2*ratio, 2, 1)
 
     container_stacks = shipping_container.ContainerStacks(base)
+
+    k = key_events.KeyEvents(base, container_stacks)
 
     base.run()
