@@ -3,6 +3,7 @@ import direct.showbase.ShowBase
 
 import panda3d_utils
 
+from earth_base import shipping_container
 
 def start():
     width = 1280
@@ -20,12 +21,15 @@ def start():
     lens.setFilmSize(2*ratio, 2)
     base.cam.node().setLens(lens)
 
-    background_texture = loader.loadTexture('images/earth_base/background.png')
+    background_texture = \
+        base.loader.loadTexture('images/earth_base/background.png')
 
-    background = render.attachNewNode(
+    background = base.render.attachNewNode(
         panda3d_utils.make_billboard('background'))
     background.setTexture(background_texture)
     background.setPos(0, 0, -1)
-    background.setScale(ratio, 1, 1)
+    background.setScale(2*ratio, 2, 1)
+
+    container_stacks = shipping_container.ContainerStacks(base)
 
     base.run()

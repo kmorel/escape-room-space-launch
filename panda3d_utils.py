@@ -10,10 +10,10 @@ def make_billboard(name, color=(1, 1, 1)):
         'square', vertex_format, panda3d.core.Geom.UHDynamic)
 
     v = panda3d.core.GeomVertexWriter(vdata, 'vertex')
-    v.addData3(-1, -1, 0)
-    v.addData3( 1, -1, 0)
-    v.addData3( 1,  1, 0)
-    v.addData3(-1,  1, 0)
+    v.addData3(-0.5, -0.5, 0)
+    v.addData3( 0.5, -0.5, 0)
+    v.addData3( 0.5,  0.5, 0)
+    v.addData3(-0.5,  0.5, 0)
 
     n = panda3d.core.GeomVertexWriter(vdata, 'normal')
     n.addData3(0, 0, 1)
