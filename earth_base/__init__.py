@@ -6,6 +6,8 @@ import panda3d_utils
 from earth_base import key_events
 from earth_base import shipping_container
 
+import html_server_earth_base
+
 def start():
     width = 1280
     height = 720
@@ -35,4 +37,8 @@ def start():
 
     k = key_events.KeyEvents(base, container_stacks)
 
+    html_server_earth_base.start(base, container_stacks)
+
     base.run()
+
+    html_server_earth_base.stop()

@@ -1,5 +1,7 @@
 import direct.showbase.DirectObject
 
+import html_server_earth_base
+
 class KeyEvents(direct.showbase.DirectObject.DirectObject):
     def __init__(self, base, containers):
         self.base = base
@@ -14,6 +16,7 @@ class KeyEvents(direct.showbase.DirectObject.DirectObject):
         self.accept('n', self.move, [2, 1])
 
     def quit(self):
+        html_server_earth_base.stop()
         self.base.userExit()
 
     def move(self, from_stack, to_stack):
