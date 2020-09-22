@@ -3,6 +3,7 @@ import threading
 import sys
 import os
 import traceback
+import qr_response
 
 html_app = flask.Flask(__name__)
 
@@ -37,6 +38,12 @@ def control_sheet():
                                  ip=get_ip(),
                                  port=5000
                                  )
+
+@html_app.route('/qr')
+def qr_gen():
+    data = flask.request.args.get('data')
+    print('Generating QR code for ', data)
+    return qr_response.generate(data)
 
 # @html_app.route('/exit-server')
 # def exit_server():
