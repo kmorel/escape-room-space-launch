@@ -22,13 +22,13 @@ class ShippingContainer:
         self.depth = 0
 
         self.container_height = 0.2
-        self.container_spacing = 3.88*self.container_height
+        self.container_spacing = 3.9*self.container_height
 
-        self.container_base_y = -0.5
+        self.container_base_y = -0.55
         self.container_lift_y = \
             self.container_base_y + (3.1*self.container_height)
 
-        self.container_x_0 = -1.0
+        self.container_x_0 = -1.22
 
         self.speed = 0.6
 
