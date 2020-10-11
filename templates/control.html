@@ -13,7 +13,7 @@
   {% for page in pages %}
   <li>
     <a href="http://{{ ip }}:{{ port }}{{ page.url }}">{{ page.name }}</a>
-    (<a href="http://{{ ip }}:{{ port }}/qr?http://{{ ip }}:{{ port }}{{ page.url }}">qr code</a>)
+    (<a href="http://{{ ip }}:{{ port }}/qr?data=http://{{ ip }}:{{ port }}{{ page.url }}">qr code</a>)
   </li>
   {% endfor %}
 </ul>
