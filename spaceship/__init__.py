@@ -4,6 +4,7 @@ import direct.showbase.ShowBase
 import panda3d_utils
 
 from spaceship import key_events
+from spaceship import launcher
 
 import html_server_spaceship
 
@@ -23,18 +24,11 @@ def start():
     lens.setFilmSize(2*ratio, 2)
     base.cam.node().setLens(lens)
 
-    background_texture = \
-        base.loader.loadTexture('images/spaceship/background.png')
-
-    background = base.render.attachNewNode(
-        panda3d_utils.make_billboard('background'))
-    background.setTexture(background_texture)
-    background.setPos(0, 3, -1)
-    background.setScale(2*ratio, 8, 1)
+    l = launcher.Launcher(base)
 
     k = key_events.KeyEvents(base)
 
-    html_server_spaceship.start(base)
+    html_server_spaceship.start(base, l)
 
     base.run()
 

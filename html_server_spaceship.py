@@ -24,6 +24,7 @@ def get_ip():
 def control_sheet():
     pages=[
         { 'name': 'control',     'url': '/' },
+        { 'name': 'launch',      'url': '/launch' },
         #{ 'name': 'exit-server', 'url': '/exit-server' },
     ]
     return flask.render_template('control.html',
@@ -38,6 +39,13 @@ def qr_gen():
     print('Generating QR code for ', data)
     return qr_response.generate(data)
 
+@html_app.route('/launch')
+def launch():
+    if launcher.has_launched:
+        return 'This sequence has already played.'
+    launcher.launch()
+    return 'Success'
+
 # @html_app.route('/exit-server')
 # def exit_server():
 #     print('Shutting down server...')
@@ -51,9 +59,11 @@ def qr_gen():
 #     print('  Returning')
 #     return 'Server shutting down...'
 
-def start(base):
+def start(base, launch):
     global panda3d_base
     panda3d_base = base
+    global launcher
+    launcher = launch
     # The graphics usually work better on the main thread, so make flask run
     # on a separate thread. (That we we can return right away, too.)
     threading.Thread(
