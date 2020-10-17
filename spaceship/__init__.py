@@ -24,6 +24,16 @@ def start():
     lens.setFilmSize(2*ratio, 2)
     base.cam.node().setLens(lens)
 
+    porthole_texture = \
+        base.loader.loadTexture('images/spaceship/porthole.png')
+
+    porthole = base.render.attachNewNode(
+        panda3d_utils.make_billboard('porthole'))
+    porthole.setTexture(porthole_texture)
+    porthole.setPos(0, 0, 1)
+    porthole.setScale(2*ratio, 2, 1)
+    porthole.setTransparency(True)
+
     l = launcher.Launcher(base)
 
     k = key_events.KeyEvents(base)
