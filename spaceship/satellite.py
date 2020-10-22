@@ -44,6 +44,9 @@ class Satellite:
         self.x = self.target_x
         self.y = self.target_y
 
+        self.v_x = 0
+        self.v_y = 0
+
         self.node.setPos(self.x, self.y, 0)
         self.node.setTexture(self.texture_off)
 
@@ -55,7 +58,10 @@ class Satellite:
 
         self.code_location = 0
 
-        direct.task.TaskManagerGlobal.taskMgr.add(self.between_d_task, 'light')
+        direct.task.TaskManagerGlobal.taskMgr.add(
+            self.between_d_task, 'light')
+        direct.task.TaskManagerGlobal.taskMgr.add(
+            self.jitter_task, 'satellite_move')
 
     def between_d_task(self, task):
         self.node.setTexture(self.texture_off)
@@ -82,7 +88,8 @@ class Satellite:
         if task.time < self.pause_end_letter:
             return direct.task.Task.cont
         else:
-            direct.task.TaskManagerGlobal.taskMgr.add(self.between_d_task, 'light')
+            direct.task.TaskManagerGlobal.taskMgr.add(
+                self.between_d_task, 'light')
             return direct.task.Task.done
 
     def end_task(self, task):
@@ -90,7 +97,8 @@ class Satellite:
         if task.time < self.pause_end:
             return direct.task.Task.cont
         else:
-            direct.task.TaskManagerGlobal.taskMgr.add(self.between_d_task, 'light')
+            direct.task.TaskManagerGlobal.taskMgr.add(
+                self.between_d_task, 'light')
             return direct.task.Task.done
 
     def dot_task(self, task):
@@ -98,7 +106,8 @@ class Satellite:
         if task.time < self.pause_dot:
             return direct.task.Task.cont
         else:
-            direct.task.TaskManagerGlobal.taskMgr.add(self.between_d_task, 'light')
+            direct.task.TaskManagerGlobal.taskMgr.add(
+                self.between_d_task, 'light')
             return direct.task.Task.done
 
     def dash_task(self, task):
@@ -106,5 +115,20 @@ class Satellite:
         if task.time < self.pause_dash:
             return direct.task.Task.cont
         else:
-            direct.task.TaskManagerGlobal.taskMgr.add(self.between_d_task, 'light')
+            direct.task.TaskManagerGlobal.taskMgr.add(
+                self.between_d_task, 'light')
             return direct.task.Task.done
+
+    def jitter_task(self, task):
+        jitter = 0.00001
+        max_move = 0.00005
+        self.v_x += random.uniform(-jitter, jitter)
+        self.v_x = min(max(self.v_x, -max_move), max_move)
+        self.x += self.v_x
+        self.x = min(max(self.x, self.target_x - 0.25), self.target_x + 0.25)
+        self.v_y += random.uniform(-jitter, jitter)
+        self.v_y = min(max(self.v_y, -max_move), max_move)
+        self.y += self.v_y
+        self.y = min(max(self.y, self.target_y - 0.25), self.target_y + 0.25)
+        self.node.setPos(self.x, self.y, 0)
+        return direct.task.Task.cont
