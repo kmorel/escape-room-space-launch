@@ -4,6 +4,8 @@ import direct.task.TaskManagerGlobal
 
 import panda3d_utils
 
+from spaceship import satellite
+
 import random
 
 class Launcher:
@@ -22,6 +24,8 @@ class Launcher:
         self.background.setScale(2*ratio, 8, 1)
 
         self.launch_sound = base.loader.loadSfx('audio/rocket-launch.ogg')
+
+        self.satellite = satellite.Satellite(base)
 
         self.has_launched = False
 
