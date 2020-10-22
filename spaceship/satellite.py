@@ -41,7 +41,7 @@ class Satellite:
         self.target_x = 0.15
         self.target_y = 0.25
 
-        self.x = self.target_x
+        self.x = -1.5
         self.y = self.target_y
 
         self.v_x = 0
@@ -61,7 +61,7 @@ class Satellite:
         direct.task.TaskManagerGlobal.taskMgr.add(
             self.between_d_task, 'light')
         direct.task.TaskManagerGlobal.taskMgr.add(
-            self.jitter_task, 'satellite_move')
+            self.move_in_place_task, 'satellite_move')
 
     def between_d_task(self, task):
         self.node.setTexture(self.texture_off)
@@ -117,6 +117,17 @@ class Satellite:
         else:
             direct.task.TaskManagerGlobal.taskMgr.add(
                 self.between_d_task, 'light')
+            return direct.task.Task.done
+
+    def move_in_place_task(self, task):
+        total_time = 10
+        if task.time < total_time:
+            self.x = (self.target_x + 1.5) * (task.time/total_time) - 1.5
+            self.node.setPos(self.x, self.y, 0)
+            return direct.task.Task.cont
+        else:
+            direct.task.TaskManagerGlobal.taskMgr.add(
+                self.jitter_task, 'satellite_move')
             return direct.task.Task.done
 
     def jitter_task(self, task):

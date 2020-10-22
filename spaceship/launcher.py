@@ -25,8 +25,6 @@ class Launcher:
 
         self.launch_sound = base.loader.loadSfx('audio/rocket-launch.ogg')
 
-        self.satellite = satellite.Satellite(base)
-
         self.has_launched = False
 
     def launch(self):
@@ -63,4 +61,5 @@ class Launcher:
             return direct.task.Task.cont
         else:
             self.background.setPos(0, -3, -1)
+            self.satellite = satellite.Satellite(base)
             return direct.task.Task.done
