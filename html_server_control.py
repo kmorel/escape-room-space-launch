@@ -23,14 +23,21 @@ def get_ip():
 @html_app.route('/')
 def control_sheet():
     pages=[
-        { 'name': 'control',     'url': '/' },
-        #{ 'name': 'exit-server', 'url': '/exit-server' },
+        { 'name': 'control',          'url': '/' },
+        { 'name': 'do-self-destruct', 'url': '/do-self-destruct' },
+        #{ 'name': 'exit-server',      'url': '/exit-server' },
     ]
     return flask.render_template('control.html',
                                  pages=pages,
                                  ip=get_ip(),
                                  port=5000
                                  )
+
+@html_app.route('/do-self-destruct')
+def do_self_destruct():
+    global self_destruct
+    self_destruct.doDestruct()
+    return 'Self Destruct Initiated'
 
 @html_app.route('/qr')
 def qr_gen():
@@ -51,9 +58,11 @@ def qr_gen():
 #     print('  Returning')
 #     return 'Server shutting down...'
 
-def start(base):
+def start(base, destruct):
     global panda3d_base
     panda3d_base = base
+    global self_destruct
+    self_destruct = destruct
     # The graphics usually work better on the main thread, so make flask run
     # on a separate thread. (That we we can return right away, too.)
     threading.Thread(

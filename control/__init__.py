@@ -4,6 +4,7 @@ import direct.showbase.ShowBase
 import panda3d_utils
 
 from control import key_events
+from control import self_destruct
 
 import html_server_control
 
@@ -34,7 +35,9 @@ def start():
 
     k = key_events.KeyEvents(base)
 
-    html_server_control.start(base)
+    destruct = self_destruct.SelfDestruct(base)
+
+    html_server_control.start(base, destruct)
 
     base.run()
 
