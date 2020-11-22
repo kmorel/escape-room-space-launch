@@ -35,6 +35,7 @@ def control_sheet():
     ]
     return flask.render_template('control.html',
                                  pages=pages,
+                                 name='Earth Base',
                                  ip=get_ip(),
                                  port=5000
                                  )

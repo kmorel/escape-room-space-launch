@@ -29,6 +29,7 @@ def control_sheet():
     ]
     return flask.render_template('control.html',
                                  pages=pages,
+                                 name='Spaceship',
                                  ip=get_ip(),
                                  port=5000
                                  )
