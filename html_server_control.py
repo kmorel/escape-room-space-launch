@@ -24,7 +24,8 @@ def get_ip():
 def control_sheet():
     pages=[
         { 'name': 'control',          'url': '/' },
-        { 'name': 'do-self-destruct', 'url': '/do-self-destruct' },
+        { 'name': 'button',           'url': '/self-destruct-button' },
+        { 'name': 'do self destruct', 'url': '/do-self-destruct' },
         #{ 'name': 'exit-server',      'url': '/exit-server' },
     ]
     return flask.render_template('control.html',
@@ -34,11 +35,15 @@ def control_sheet():
                                  port=5000
                                  )
 
+@html_app.route('/self-destruct-button')
+def self_destruct_button():
+    return flask.render_template('self-destruct-button.html')
+
 @html_app.route('/do-self-destruct')
 def do_self_destruct():
     global self_destruct
     self_destruct.doDestruct()
-    return 'Self Destruct Initiated'
+    return flask.render_template('walkie-talkie.html')
 
 @html_app.route('/qr')
 def qr_gen():
