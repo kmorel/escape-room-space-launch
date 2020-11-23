@@ -4,6 +4,8 @@ import direct.task.TaskManagerGlobal
 
 import panda3d_utils
 
+from control import qr_display
+
 
 class NotePanel:
     def __init__(self, base):
@@ -29,7 +31,13 @@ class SelfDestruct:
     def __init__(self, base):
         self.panel = NotePanel(base)
 
+        self.qr = qr_display.QrDisplay(base)
+
+    def intro(self):
+        self.qr.intro()
+
     def doDestruct(self):
+        self.qr.move_qr_out()
         # Play dialog
 
         self.panel.reveal()

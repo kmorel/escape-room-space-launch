@@ -24,6 +24,7 @@ def get_ip():
 def control_sheet():
     pages=[
         { 'name': 'control',          'url': '/' },
+        { 'name': 'intro',            'url': '/intro' },
         { 'name': 'button',           'url': '/self-destruct-button' },
         { 'name': 'do self destruct', 'url': '/do-self-destruct' },
         #{ 'name': 'exit-server',      'url': '/exit-server' },
@@ -34,6 +35,12 @@ def control_sheet():
                                  ip=get_ip(),
                                  port=5000
                                  )
+
+@html_app.route('/intro')
+def intro():
+    global self_destruct
+    self_destruct.intro()
+    return flask.render_template('walkie-talkie.html')
 
 @html_app.route('/self-destruct-button')
 def self_destruct_button():

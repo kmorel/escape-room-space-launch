@@ -5,7 +5,6 @@ import panda3d_utils
 
 from control import key_events
 from control import self_destruct
-from control import qr_display
 
 import html_server_control
 
@@ -36,8 +35,6 @@ def start():
     panel.setScale(2*ratio, 2, 1)
 
     k = key_events.KeyEvents(base)
-
-    qr = qr_display.QrDisplay(base)
 
     destruct = self_destruct.SelfDestruct(base)
 

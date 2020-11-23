@@ -32,6 +32,9 @@ class QrDisplay:
 
         self.set_qr_texture('intro')
 
+        # Replace with actual dialogue sound
+        self.intro_dialogue = base.loader.loadSfx('audio/hydraulic-lift.ogg')
+
     def set_qr_texture(self, page):
         url = 'http://' + get_ip() + ':5000/' + page
 
@@ -46,3 +49,44 @@ class QrDisplay:
         texture = panda3d.core.Texture()
         texture.load(pnm)
         self.node.setTexture(texture)
+
+    def move_qr_out(self):
+        direct.task.TaskManagerGlobal.taskMgr.add(self.move_out_task, 'move-qr')
+
+    def move_out_task(self, task):
+        next_x = self.window_pos[0] + (task.time * 0.5)
+        if next_x < self.window_pos[0] + 1:
+            self.node.setPos(next_x, self.window_pos[1], self.window_pos[2])
+            return direct.task.Task.cont
+        else:
+            self.node.setPos(self.window_pos[0] + (task.time * 0.5),
+                             self.window_pos[1],
+                             self.window_pos[2])
+            return direct.task.Task.done
+
+    def move_qr_in(self):
+        direct.task.TaskManagerGlobal.taskMgr.add(self.move_in_task, 'move-qr')
+
+    def move_in_task(self, task):
+        next_x = self.window_pos[0] + (task.time * 0.5) - 1
+        if next_x < self.window_pos[0]:
+            self.node.setPos(next_x, self.window_pos[1], self.window_pos[2])
+            return direct.task.Task.cont
+        else:
+            self.node.setPos(
+                self.window_pos[0], self.window_pos[1], self.window_pos[2])
+            return direct.task.Task.done
+
+    def intro(self):
+        self.move_qr_out()
+        self.intro_dialogue.play()
+        direct.task.TaskManagerGlobal.taskMgr.add(
+            self.wait_dialogue_task, 'wait-dialog')
+
+    def wait_dialogue_task(self, task):
+        if self.intro_dialogue.status() == panda3d.core.AudioSound.PLAYING:
+            return direct.task.Task.cont
+        else:
+            self.set_qr_texture('self-destruct-button')
+            self.move_qr_in()
+            return direct.task.Task.done
