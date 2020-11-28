@@ -1,4 +1,8 @@
 import panda3d.core
+import direct.task.Task
+import direct.task.TaskManagerGlobal
+
+import threading
 
 # Makes a square parallel to the x/y plane from -1 to 1 in the
 # x and y directions. A Panda3D GeomNode of the given name is
@@ -44,3 +48,26 @@ def make_billboard(name, color=(1, 1, 1)):
     square_node.addGeom(square_geom)
     return square_node
 
+_sound_task_count = 0
+
+class play_then_run:
+    def __init__(self, sound, function):
+        global _sound_task_count
+        task_name = 'wait-for-sound-' + str(_sound_task_count)
+        _sound_task_count += 1
+
+        sound.play()
+        self.sound = sound
+        self.function = function
+
+        direct.task.TaskManagerGlobal.taskMgr.add(
+            self.sound_wait_task, task_name)
+
+    def sound_wait_task(self, task):
+        if self.sound.status() == panda3d.core.AudioSound.PLAYING:
+            return direct.task.Task.cont
+        else:
+            # Start function in new thread so we don't block the return and
+            # other events.
+            threading.Thread(target=self.function).start()
+            return direct.task.Task.done

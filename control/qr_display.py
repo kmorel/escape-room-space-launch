@@ -79,14 +79,9 @@ class QrDisplay:
 
     def intro(self):
         self.move_qr_out()
-        self.intro_dialogue.play()
-        direct.task.TaskManagerGlobal.taskMgr.add(
-            self.wait_dialogue_task, 'wait-dialog')
+        panda3d_utils.play_then_run(
+            self.intro_dialogue, self.show_self_destruct_qr)
 
-    def wait_dialogue_task(self, task):
-        if self.intro_dialogue.status() == panda3d.core.AudioSound.PLAYING:
-            return direct.task.Task.cont
-        else:
+    def show_self_destruct_qr(self):
             self.set_qr_texture('self-destruct-button')
             self.move_qr_in()
-            return direct.task.Task.done
