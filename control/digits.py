@@ -1,4 +1,6 @@
 import panda3d.core
+import direct.task.Task
+import direct.task.TaskManagerGlobal
 
 import panda3d_utils
 
@@ -24,3 +26,14 @@ class DigitDisplay:
     def set_digit(self, digit):
         self.node.setTexture(self.digit_textures[digit])
         self.beep.play()
+        direct.task.TaskManagerGlobal.taskMgr.remove('clear-digit')
+        direct.task.TaskManagerGlobal.taskMgr.add(
+            self.clear_digit_task, 'clear-digit')
+
+    def clear_digit_task(self, task):
+        # Clear out digit after 30 seconds
+        if task.time < 30:
+            return direct.task.Task.cont
+        else:
+            self.node.setTexture(self.digit_textures[0])
+            return direct.task.Task.done
