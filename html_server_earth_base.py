@@ -5,6 +5,8 @@ import os
 import traceback
 import qr_response
 
+import panda3d.core
+
 html_app = flask.Flask(__name__)
 
 def get_ip():
@@ -23,15 +25,16 @@ def get_ip():
 @html_app.route('/')
 def control_sheet():
     pages=[
-        { 'name': 'control',     'url': '/' },
-        #{ 'name': 'exit-server', 'url': '/exit-server' },
-        { 'name': 'containers',  'url': '/container' },
-        { 'name': 'move 0-->1',  'url': '/move/0/1' },
-        { 'name': 'move 0-->2',  'url': '/move/0/2' },
-        { 'name': 'move 0<--1',  'url': '/move/1/0' },
-        { 'name': 'move 1-->2',  'url': '/move/1/2' },
-        { 'name': 'move 0<--2',  'url': '/move/2/0' },
-        { 'name': 'move 1<--2',  'url': '/move/2/1' },
+        { 'name': 'control',         'url': '/' },
+        { 'name': 'container entry', 'url': '/container-entry' },
+        { 'name': 'containers',      'url': '/container' },
+        { 'name': 'move 0-->1',      'url': '/move/0/1' },
+        { 'name': 'move 0-->2',      'url': '/move/0/2' },
+        { 'name': 'move 0<--1',      'url': '/move/1/0' },
+        { 'name': 'move 1-->2',      'url': '/move/1/2' },
+        { 'name': 'move 0<--2',      'url': '/move/2/0' },
+        { 'name': 'move 1<--2',      'url': '/move/2/1' },
+        #{ 'name': 'exit-server',     'url': '/exit-server' },
     ]
     return flask.render_template('control.html',
                                  pages=pages,
@@ -59,8 +62,23 @@ def qr_gen():
 #     print('  Returning')
 #     return 'Server shutting down...'
 
+did_container_intro = False
+
+@html_app.route('/container-entry')
+def container_entry():
+    global did_container_intro
+    if not did_container_intro:
+        return qr_response.generate('http://' + get_ip() + ':5000/container')
+    else:
+        return container_control()
+
 @html_app.route('/container')
 def container_control():
+    global did_container_intro
+    if not did_container_intro:
+        did_container_intro = True
+        global go_to_armory_sound
+        go_to_armory_sound.play()
     return flask.render_template('earth-base-containers.html',
                                  m01=containers.can_move(0,1),
                                  m02=containers.can_move(0,2),
@@ -80,6 +98,8 @@ def start(base, container_stacks):
     panda3d_base = base
     global containers
     containers = container_stacks
+    global go_to_armory_sound
+    go_to_armory_sound = base.loader.loadSfx('audio/dialogue/go-to-armory.ogg')
     # The graphics usually work better on the main thread, so make flask run
     # on a separate thread. (That we we can return right away, too.)
     threading.Thread(
