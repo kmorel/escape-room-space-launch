@@ -27,6 +27,10 @@ def control_sheet():
         { 'name': 'intro',            'url': '/intro' },
         { 'name': 'button',           'url': '/self-destruct-button' },
         { 'name': 'do self destruct', 'url': '/do-self-destruct' },
+        { 'name': 'digit 1',          'url': '/digit/1' },
+        { 'name': 'digit 2',          'url': '/digit/2' },
+        { 'name': 'digit 3',          'url': '/digit/3' },
+        { 'name': 'digit 4',          'url': '/digit/4' },
         #{ 'name': 'exit-server',      'url': '/exit-server' },
     ]
     return flask.render_template('control.html',
@@ -52,6 +56,17 @@ def do_self_destruct():
     self_destruct.doDestruct()
     return flask.render_template('walkie-talkie.html')
 
+@html_app.route('/digit/<int:digit>')
+def show_digit(digit):
+    global digit_display
+    digit_display.set_digit(digit)
+    if digit < 4:
+        return qr_response.generate(
+            'http://' + get_ip() + ':5000/digit/' + str(digit + 1))
+    else:
+        return 'Sequence complete'
+        
+
 @html_app.route('/qr')
 def qr_gen():
     data = flask.request.args.get('data')
@@ -71,11 +86,13 @@ def qr_gen():
 #     print('  Returning')
 #     return 'Server shutting down...'
 
-def start(base, destruct):
+def start(base, destruct, digit):
     global panda3d_base
     panda3d_base = base
     global self_destruct
     self_destruct = destruct
+    global digit_display
+    digit_display = digit
     # The graphics usually work better on the main thread, so make flask run
     # on a separate thread. (That we we can return right away, too.)
     threading.Thread(

@@ -5,6 +5,7 @@ import panda3d_utils
 
 from control import key_events
 from control import self_destruct
+from control import digits
 
 import html_server_control
 
@@ -38,7 +39,9 @@ def start():
 
     destruct = self_destruct.SelfDestruct(base)
 
-    html_server_control.start(base, destruct)
+    digit = digits.DigitDisplay(base)
+
+    html_server_control.start(base, destruct, digit)
 
     base.run()
 
