@@ -23,16 +23,27 @@ class Launcher:
         self.background.setPos(0, 3, -1)
         self.background.setScale(2*ratio, 8, 1)
 
+        self.thud_sound = base.loader.loadSfx('audio/thud.ogg')
         self.launch_sound = base.loader.loadSfx('audio/rocket-launch.ogg')
+        self.dialogue_before = base.loader.loadSfx(
+            'audio/dialogue/launch-before.ogg')
+        self.dialogue_after = base.loader.loadSfx(
+            'audio/dialogue/launch-after.ogg')
 
         self.has_launched = False
 
     def launch(self):
         if self.has_launched:
             return
+        self.has_launched = True
+        panda3d_utils.play_then_run(self.dialogue_before, self.lock)
+
+    def lock(self):
+        panda3d_utils.play_then_run(self.thud_sound, self.start_launch)
+
+    def start_launch(self):
         direct.task.TaskManagerGlobal.taskMgr.add(self.wait_task, 'launch')
         self.launch_sound.play()
-        self.has_launched = True
 
     def wait_task(self, task):
         if task.time < 3:
@@ -55,11 +66,12 @@ class Launcher:
             return direct.task.Task.done
 
     def move_task(self, task):
-        interp = task.time/16
+        interp = task.time/18
         if interp < 1:
             self.background.setPos(0, 3 - (6 * interp), -1)
             return direct.task.Task.cont
         else:
             self.background.setPos(0, -3, -1)
             self.satellite = satellite.Satellite(base)
+            self.dialogue_after.play()
             return direct.task.Task.done
