@@ -64,7 +64,7 @@ def show_digit(digit):
         return qr_response.generate(
             'http://' + get_ip() + ':5000/digit/' + str(digit + 1))
     else:
-        return 'Sequence complete'
+        return flask.render_template('sequence-complete.html')
         
 
 @html_app.route('/qr')
