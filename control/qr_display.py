@@ -32,8 +32,8 @@ class QrDisplay:
 
         self.set_qr_texture('intro')
 
-        # Replace with actual dialogue sound
-        self.intro_dialogue = base.loader.loadSfx('audio/hydraulic-lift.ogg')
+        self.intro_dialogue = base.loader.loadSfx(
+            'audio/dialogue/control-room-intro.ogg')
 
     def set_qr_texture(self, page):
         url = 'http://' + get_ip() + ':5000/' + page

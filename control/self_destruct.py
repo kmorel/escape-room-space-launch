@@ -33,11 +33,20 @@ class SelfDestruct:
 
         self.qr = qr_display.QrDisplay(base)
 
+        self.destruct_sound_1 = base.loader.loadSfx(
+            'audio/dialogue/self-destruct-message.ogg')
+        self.destruct_sound_2 = base.loader.loadSfx(
+            'audio/dialogue/find-escape-pod.ogg')
+
     def intro(self):
         self.qr.intro()
 
     def doDestruct(self):
         self.qr.move_qr_out()
-        # Play dialog
+        panda3d_utils.play_then_run(self.destruct_sound_1, self.doDestruct2)
 
+    def doDestruct2(self):
+        panda3d_utils.play_then_run(self.destruct_sound_2, self.doDestruct3)
+
+    def doDestruct3(self):
         self.panel.reveal()
