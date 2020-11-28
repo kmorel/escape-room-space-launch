@@ -6,7 +6,7 @@ import io
 def generate(data):
     image = qrcode.make(
         data,
-        box_size=100,
+        box_size=50,
         image_factory=qrcode.image.svg.SvgPathFillImage,
     )
     buffer = io.BytesIO()
