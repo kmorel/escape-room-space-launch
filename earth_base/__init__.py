@@ -5,6 +5,7 @@ import panda3d_utils
 
 from earth_base import key_events
 from earth_base import shipping_container
+from earth_base import helicopter
 
 import html_server_earth_base
 
@@ -35,9 +36,11 @@ def start():
 
     container_stacks = shipping_container.ContainerStacks(base)
 
-    k = key_events.KeyEvents(base, container_stacks)
+    heli = helicopter.Helicopter(base, background)
 
-    html_server_earth_base.start(base, container_stacks)
+    k = key_events.KeyEvents(base, container_stacks, heli)
+
+    html_server_earth_base.start(base, container_stacks, heli)
 
     base.run()
 

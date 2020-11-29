@@ -93,13 +93,19 @@ def move(start, end):
     containers.move(start, end)
     return container_control()
 
-def start(base, container_stacks):
+@html_app.route('/heli')
+def do_heli():
+    heli.attack()
+
+def start(base, container_stacks, helicopter):
     global panda3d_base
     panda3d_base = base
     global containers
     containers = container_stacks
     global go_to_armory_sound
     go_to_armory_sound = base.loader.loadSfx('audio/dialogue/go-to-armory.ogg')
+    global heli
+    heli = helicopter
     # The graphics usually work better on the main thread, so make flask run
     # on a separate thread. (That we we can return right away, too.)
     threading.Thread(
