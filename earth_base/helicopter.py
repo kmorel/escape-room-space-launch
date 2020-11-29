@@ -5,6 +5,8 @@ import direct.task.TaskManagerGlobal
 import panda3d_utils
 
 import random
+import threading
+import time
 
 class Helicopter:
     def __init__(self, base, background):
@@ -17,6 +19,15 @@ class Helicopter:
         self.dialogue_after = base.loader.loadSfx(
             'audio/dialogue/heli-crash-3.ogg')
 
+        heli_texture = base.loader.loadTexture(
+            'images/earth_base/helicopter.png')
+        self.heli = base.render.attachNewNode(
+            panda3d_utils.make_billboard('helicopter'))
+        self.heli.setTexture(heli_texture)
+        self.heli.setTransparency(True)
+        self.heli.setScale(1.45*1, 1, 1)
+        self.heli.setPos(-3, 0, 1)
+
         door_texture = base.loader.loadTexture(
             'images/earth_base/rocket-door.png')
         self.door_pos = (0.8, -.5, 1)
@@ -27,6 +38,7 @@ class Helicopter:
         self.door.setScale(0.93*0.5, 0.5, 1)
         self.door.setPos(0, 0, -4)
 
+        self.heli_sound = base.loader.loadSfx('audio/helicopter.ogg')
         self.explosion_sound = base.loader.loadSfx('audio/explosion.ogg')
 
         self.boink = base.loader.loadSfx('audio/boink.ogg')
@@ -40,7 +52,25 @@ class Helicopter:
         self.wheel.setPos(0, 0, -4)
 
     def attack(self):
-        self.explosion()
+        self.dialogue_before.play()
+        self.go_heli()
+
+    def go_heli(self):
+        panda3d_utils.play_then_run(self.heli_sound, self.explosion)
+        threading.Thread(target=self.wait_play_dialogue).start()
+
+    def wait_play_dialogue(self):
+        time.sleep(9)
+        self.dialogue_during.play()
+        direct.task.TaskManagerGlobal.taskMgr.add(self.heli_task, 'helicopter')
+
+    def heli_task(self, task):
+        x = 2*task.time - 3
+        self.heli.setPos(x, 0, 1)
+        if x < 3:
+            return direct.task.Task.cont
+        else:
+            return direct.task.Task.done
 
     def explosion(self):
         self.explosion_sound.play()

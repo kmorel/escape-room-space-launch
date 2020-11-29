@@ -34,6 +34,7 @@ def control_sheet():
         { 'name': 'move 1-->2',      'url': '/move/1/2' },
         { 'name': 'move 0<--2',      'url': '/move/2/0' },
         { 'name': 'move 1<--2',      'url': '/move/2/1' },
+        { 'name': 'heli attack',     'url': '/heli' },
         #{ 'name': 'exit-server',     'url': '/exit-server' },
     ]
     return flask.render_template('control.html',
@@ -96,6 +97,7 @@ def move(start, end):
 @html_app.route('/heli')
 def do_heli():
     heli.attack()
+    return flask.render_template('walkie-talkie.html')
 
 def start(base, container_stacks, helicopter):
     global panda3d_base
