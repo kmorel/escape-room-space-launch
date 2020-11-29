@@ -26,6 +26,7 @@ def get_ip():
 def control_sheet():
     pages=[
         { 'name': 'control',         'url': '/' },
+        { 'name': 'acknowledge',     'url': '/ack' },
         { 'name': 'container entry', 'url': '/container-entry' },
         { 'name': 'containers',      'url': '/container' },
         { 'name': 'move 0-->1',      'url': '/move/0/1' },
@@ -43,6 +44,10 @@ def control_sheet():
                                  ip=get_ip(),
                                  port=5000
                                  )
+
+@html_app.route('/ack')
+def ack():
+    return flask.render_template('ack.html', name='Earth Base')
 
 @html_app.route('/qr')
 def qr_gen():

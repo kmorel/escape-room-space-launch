@@ -24,6 +24,7 @@ def get_ip():
 def control_sheet():
     pages=[
         { 'name': 'control',          'url': '/' },
+        { 'name': 'acknowledge',      'url': '/ack' },
         { 'name': 'intro',            'url': '/intro' },
         { 'name': 'button',           'url': '/self-destruct-button' },
         { 'name': 'do self destruct', 'url': '/do-self-destruct' },
@@ -39,6 +40,10 @@ def control_sheet():
                                  ip=get_ip(),
                                  port=5000
                                  )
+
+@html_app.route('/ack')
+def ack():
+    return flask.render_template('ack.html', name='Control Panel')
 
 @html_app.route('/intro')
 def intro():
